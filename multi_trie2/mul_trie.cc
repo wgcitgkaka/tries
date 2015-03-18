@@ -140,11 +140,12 @@ void MulTrie::insert2(Mnode* pmnode, char* prefix, int nexthop, int group[FLOOR_
 		{
 			index_nodes = pmnode->info[k]/2;
 			leafpush(index_nodes,nexthop,count,flag+1,group);
-		}
+}
 	}
 
 
 }
+
 void MulTrie::leafpush(int index, int nexthop, int mlength,int flag,int group[FLOOR_SIZE])
 {
 	int start, end;
@@ -341,3 +342,6 @@ int MulTrie::pow(int n)
 		return 1<<n;
 	}
 }
+
+
+
