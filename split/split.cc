@@ -10,7 +10,7 @@
 using namespace std;
 
 #define PREFIXLENGTH   32
-#define SPOS           2 
+#define SPOS           14 
 #define BUFFER_SIZE    256
 #define LESS_LENGTH    0
 map<string, vector<string> > mymap;
@@ -24,14 +24,17 @@ int main()
 {
 	
 	FILE* file;	
-	file = fopen("data_test","r");
-	char buffer[BUFFER_SIZE]; 
+	file = fopen("rrc14_201209010000_v4.txt","r");
+	char* buffer; 
+	char buffer2[BUFFER_SIZE];
 	char* addr2;
 	
 //	while(fgets(buffer,BUFFER_SIZE,file))
-	while(fscanf(file,"%s",buffer) != -1)
+	while(fscanf(file,"%s",buffer2) != -1)
 	{
+		buffer = strtok(buffer2,"");
 		printf("%s\n",buffer);
+		
 		
 		addr2 = mysplit(buffer,SPOS);
 
