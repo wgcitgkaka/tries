@@ -10,7 +10,7 @@
 using namespace std;
 
 #define PREFIXLENGTH   32
-#define SPOS           2 
+#define SPOS           14 
 #define BUFFER_SIZE    256
 #define LESS_LENGTH    0
 map<string, vector<string> > mymap;
@@ -24,14 +24,21 @@ int main()
 {
 	
 	FILE* file;	
-	file = fopen("data_test","r");
-	char buffer[BUFFER_SIZE]; 
+	file = fopen("rrc14_201209010000_v4.txt","r");
+	char* buffer; 
+	char buffer2[BUFFER_SIZE];
 	char* addr2;
 	
-//	while(fgets(buffer,BUFFER_SIZE,file))
-	while(fscanf(file,"%s",buffer) != -1)
+	while(fgets(buffer2,BUFFER_SIZE,file))
+//	while(fscanf(file,"%s",buffer2) != -1)
 	{
-		printf("%s\n",buffer);
+		
+		buffer = strtok(buffer2," ");
+		if(buffer2[strlen(buffer2)-1] == '\n')
+			buffer2[strlen(buffer2)-1] = 0;
+//		printf("%s\n",buffer);
+//		printf("%s\n",buffer2);
+		
 		
 		addr2 = mysplit(buffer,SPOS);
 
@@ -41,7 +48,7 @@ int main()
 		//	printf("%s\n",addr2);
 		}
 		//mapprint();
-		printf("-----\n");
+//		printf("-----\n");
 	}
 	myprint();
 
@@ -52,9 +59,10 @@ int main()
 char* mysplit(char* a, int spos)
 {
 	int len = strlen(a);
-	b=(char*)malloc(40);
-
-	printf("length=%d\n",len);
+//	b=(char*)malloc(256);
+	b = new char[100];
+	memset(b,0,100);
+//	printf("length=%d\n",len);
 	if(len <= SPOS)
 	{
 		return LESS_LENGTH;
@@ -90,13 +98,31 @@ void myinsert(char* addr2,char buffer[256])
 	if(!ret.second)
 	{
 		(ret.first->second).push_back(buffer);
+		sort(ret.first->second.begin(),ret.first->second.end());
+		ret.first->second.erase(unique(ret.first->second.begin(),ret.first->second.end()),ret.first->second.end());
 	}
 
 }
 
+int cmp(const pair<string,int> &x,const pair<string,int>&y)
+{
+	return x.second > y.second;
+}
 
+void sortMapbyValue(map<string, int> &t_map, vector<pair<string,int> > &t_vec)
+{
+	for(map<string,int>::iterator iter = t_map.begin(); iter != t_map.end(); iter++)
+	{
+		t_vec.push_back(make_pair(iter->first,iter->second));
+	}
+
+	sort(t_vec.begin(),t_vec.end(),cmp);
+}
 void myprint()
 {
+	map<string,int> m_result;
+	vector<pair<string,int> > v_result;
+
 	map<string, vector<string> >::iterator it = mymap.begin();
 	cout<<"groupid"<<"          "<<"addr2"<<"          "<<"count"<<endl;
 	int i = 0;
@@ -108,12 +134,40 @@ void myprint()
 			j++;
 		//	cout<< i <<"    " << it->first <<"    "<< *iter <<"    "<< j << endl;
 		}
+			ofstream outf("result.txt",ios::app);
+			streambuf *default_buff = cout.rdbuf();
+
+			cout.rdbuf(outf.rdbuf());
+
 			cout<< i <<"    " << it->first <<"    "<<  j << endl;
-		
+
+			outf.flush();
+			outf.close();	
+			cout.rdbuf(default_buff);
+			
+			m_result.insert(make_pair(it->first,j));
+			
+
 		i++;
 		++it;
 	}
+
+	sortMapbyValue(m_result,v_result);
 	
+	for(int k = 0; k < v_result.size(); k++)
+	{
+		ofstream outf2("sort_result.txt",ios::app);
+		streambuf *default_buff2 = cout.rdbuf();
+		cout.rdbuf(outf2.rdbuf());
+		
+		cout<< k << "    " << v_result[k].first << "    " << v_result[k].second << endl;
+
+		outf2.flush();
+		outf2.close();
+		cout.rdbuf(default_buff2);
+
+	}
+
 }
 
 
