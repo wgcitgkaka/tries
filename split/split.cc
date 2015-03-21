@@ -13,20 +13,30 @@ using namespace std;
 #define SPOS           14 
 #define BUFFER_SIZE    256
 #define LESS_LENGTH    0
-map<string, vector<string> > mymap;
+
+map<string, vector<string> > mymap;//group key=addr2 value = addr1
+
 vector<string> myvector;
-map<string,int > mymap2;
+
+map<string,int > mymap2;//group key=add1 value=count(addr1)
+
 char* b;
 char* c;
-char* mysplit(char* a, int spos);
+char* d;
+
 void myinsert(char* addr2,char buffer[256]);
-void myprint();
+
 void vec_uniq();
 void tongjikey();
-void myprint2();
-char* mysplit2(string a, int spos);
-int cmp(const pair<string,int> &x,const pair<string,int>&y);
 
+void myprint();
+void myprint2();
+
+char* mysplit(char* a, int spos);
+char* mysplit2(string a, int spos);
+char* mysplit3(char* a, int spos);
+
+int cmp(const pair<string,int> &x,const pair<string,int>&y);
 void sortMapbyValue(map<string, int> &t_map, vector<pair<string,int> > &t_vec);
 
 int main()
@@ -38,6 +48,7 @@ int main()
 	char* buffer; 
 	char buffer2[BUFFER_SIZE];
 	char* addr2;
+	char* addr1;
 	
 	while(fgets(buffer2,BUFFER_SIZE,file))
 //	while(fscanf(file,"%s",buffer2) != -1)
@@ -55,8 +66,10 @@ int main()
 
 		if(addr2)
 		{
-			myinsert(addr2,buffer);
+			addr1 = mysplit3(buffer,SPOS);
+			myinsert(addr2,addr1);
 		//	printf("%s\n",addr2);
+			delete[] d;
 		}
 		//mapprint();
 //		printf("-----\n");
@@ -95,18 +108,7 @@ void tongjikey()
 	}
 }
 
-char* mysplit2(string a, int spos)
-{
-	c = new char[50];
-	memset(c,0,50);
-	if(a.size() <= SPOS)
-		return LESS_LENGTH;
-	for(int i=0; i < SPOS; i++)
-	{
-		c[i] =  a[i];
-	}
-	return c;
-}
+
 char* mysplit(char* a, int spos)
 {
 	int len = strlen(a);
@@ -128,6 +130,42 @@ char* mysplit(char* a, int spos)
 	}
 
 	return b;
+
+}
+char* mysplit2(string a, int spos)
+{
+	c = new char[50];
+	memset(c,0,50);
+	if(a.size() <= SPOS)
+		return LESS_LENGTH;
+	for(int i=0; i < SPOS; i++)
+	{
+		c[i] =  a[i];
+	}
+	return c;
+}
+
+char* mysplit3(char* a, int spos)
+{
+	int len = strlen(a);
+//	b=(char*)malloc(256);
+	d = new char[100];
+	memset(d,0,100);
+//	printf("length=%d\n",len);
+	if(len <= SPOS)
+	{
+		return LESS_LENGTH;
+	}
+
+	for(int i = 0; i < SPOS; i++)
+	{
+		d[i] = a[i];
+	//	printf("%c\n",a[i]);
+		
+		//printf("hehe\n");
+	}
+
+	return d;
 
 }
 
@@ -178,7 +216,7 @@ void myprint2()
 	while(it != v_result2.end())
 	{
 		
-			ofstream outf("result2.txt",ios::app);
+			ofstream outf("sort_result2.txt",ios::app);
 			streambuf *default_buff = cout.rdbuf();
 
 			cout.rdbuf(outf.rdbuf());
@@ -200,12 +238,19 @@ void myprint()
 	map<string, vector<string> >::iterator it = mymap.begin();
 	cout<<"groupid"<<"          "<<"addr2"<<"          "<<"count"<<endl;
 	int i = 0;
+	string aa;
+	string bb = "0";
+	string cc = "0";
 	while (it != mymap.end())
 	{
 		int j = 0;
+		cc = "0";
 		for(vector<string>::iterator iter = it->second.begin(); iter != it->second.end(); ++iter)
 		{
 			j++;
+			bb = *iter;
+			if(bb > cc)
+				cc = bb;
 		//	cout<< i <<"    " << it->first <<"    "<< *iter <<"    "<< j << endl;
 		}
 			ofstream outf("result.txt",ios::app);
@@ -213,7 +258,7 @@ void myprint()
 
 			cout.rdbuf(outf.rdbuf());
 
-			cout<< i <<"    " << it->first <<"    "<<  j << endl;
+			cout<< i <<"    " << it->first <<"    "<<  j<<"    "<< cc << endl;
 
 			outf.flush();
 			outf.close();	

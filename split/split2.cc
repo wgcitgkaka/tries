@@ -13,6 +13,7 @@ using namespace std;
 #define SPOS           14 
 #define BUFFER_SIZE    256
 #define LESS_LENGTH    0
+
 map<string, vector<string> > mymap;
 vector<string> myvector;
 map<string,int > mymap2;
