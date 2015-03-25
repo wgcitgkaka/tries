@@ -11,7 +11,7 @@
 #include <list>
 using namespace std;
 
-#define SPOS           2
+#define SPOS           14
 #define BUFFER_SIZE    256
 #define LESS_LENGTH    0
 
@@ -69,7 +69,7 @@ int main()
 {
 	
 	FILE* file;	
-	file = fopen("data_test","r");
+	file = fopen("rrc14_201209010000_v4.txt","r");
 //	file = fopen("data_test","r");
 	char* buffer; 
 	char buffer2[BUFFER_SIZE];
