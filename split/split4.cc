@@ -11,7 +11,7 @@
 #include <list>
 using namespace std;
 
-#define SPOS           14
+#define SPOS           2
 #define BUFFER_SIZE    256
 #define LESS_LENGTH    0
 
@@ -25,7 +25,11 @@ map<string,int > mymap2;//group key=add1 value=count(addr1)
 map<string,vector<int> > mymap3;//addr1,vector<gid>
 map<int,list<unsigned long> > mymap4;//g[] shu zu
 map<string,int> mymap5;//addr2  gid
+map<string, list<unsigned long> > mymap6;//g[] id is addr2
+map<string, vector<string> > mymap1;//addr1 addr2
+
 vector<pair<string,int> > myvector2;//addr1 chu xian zai ji he shu zu li mian
+
 
 
 char* b;//split1
@@ -35,10 +39,12 @@ char* d;//split3
 unsigned long int pow(unsigned long int i,unsigned long int j);
 
 unsigned long length = pow((unsigned long int)2,(unsigned long int)SPOS);
+
 unsigned long int* key_key1 = new unsigned long int[length]; 
+unsigned long int* key_key2 = new unsigned long int[length];
 
 
-void myinsert(char* addr2,char buffer[256]);
+void myinsert(char* addr2, char* buffer);
 
 void vec_uniq();//vector qu chong
 void tongjikey();//tongji key1
@@ -61,6 +67,7 @@ list<unsigned long int> operator*(list<unsigned long int> aa, list<unsigned long
 void findMkey();
 void make_map3();
 unsigned long int test_g(string addr1);
+void test_g2(string s,string s1,unsigned long int g);
 
 void testprint();
 
@@ -68,6 +75,7 @@ void testprint();
 int main()
 {
 	
+	memset(key_key2,0,length*sizeof(unsigned long int));
 	FILE* file;	
 	file = fopen("rrc14_201209010000_v4.txt","r");
 //	file = fopen("data_test","r");
@@ -205,11 +213,19 @@ char* mysplit3(char* a, int spos)
 
 }
 
-void myinsert(char* addr2,char buffer[256])
+void myinsert(char* addr2,char* addr1)
 {
 	vector<string> a;
-	a.push_back(buffer);
+	a.push_back(addr1);
+
+	vector<string> aa;
+	aa.push_back(addr2);
+
+	list<unsigned long> gshuzu;
+	gshuzu.push_back(0);
 	
+	string s = addr1;
+	string s1 = addr2;
 /*	for(vector<string>::iterator iter = a.begin(); iter != a.end(); ++iter)
 	{
 //		printf("iter%s\n", (char*) *iter);
@@ -218,23 +234,82 @@ void myinsert(char* addr2,char buffer[256])
 	}
 	
 */
-	string s = buffer;
-	pair<map<string, vector<string> >::iterator, bool>  ret = mymap.insert(make_pair(addr2,a));
-	
-	if(!ret.second)
+
+	unsigned long int g,addr1_a = 0;
+		
+	for(int k = s.size()-1,j = 0 ; k >= 0; k--,j++)
 	{
+		if(s[k] == '1')
+		{
+			addr1_a = addr1_a + pow((unsigned long)2,(unsigned long)j);
+				
+		}
+	}
+		
+	
+	g = key_key2[addr1_a];
+		
+
+	pair<map<string, vector<unsigned long> >::iterator, bool>  ret2 = mymap6.insert(make_pair(addr2,gshuzu));
+	
+	if(!ret2.second)
+	{
+		pair<map<string, vector<string> >::iterator, bool>  ret = mymap.insert(make_pair(addr2,a));
+	
+		if(!ret.second)
+		{
 				
 		//(ret.first->second).push_back(buffer);
 
-		if(find(ret.first->second.begin(),ret.first->second.end(),s) == ret.first->second.end())
+			if(find(ret.first->second.begin(),ret.first->second.end(),s) == ret.first->second.end())
 
-               		(ret.first->second).push_back(*buffer);
+               			(ret.first->second).push_back(addr1);
 
 		//sort(ret.first->second.begin(),ret.first->second.end());
 		//ret.first->second.erase(unique(ret.first->second.begin(),ret.first->second.end()),ret.first->second.end());
+		}
+	
+	
+
+		pair<map<string, vector<string> >::iterator, bool>  ret1 = mymap1.insert(make_pair(addr1,aa));
+	
+		if(!ret1.second)
+		{
+				
+
+			if(find(ret1.first->second.begin(),ret1.first->second.end(),s1) == ret1.first->second.end())
+			{
+               			(ret1.first->second).push_back(addr2);
+				test_g2(s,s1,g);
+			}
+
+		}
+	
+	}
+	else
+	{	
+
+		mymap.insert(make_pair(addr2,a));
+
+		pair<map<string, vector<string> >::iterator, bool>  ret3 = mymap1.insert(make_pair(addr1,aa));
+	
+		if(!ret3.second)
+		{
+				
+			if(find(ret3.first->second.begin(),ret3.first->second.end(),s1) == ret3.first->second.end())
+			{
+               			(ret3.first->second).push_back(addr2);
+				test_g2(s,s1,g);
+			}
+
+		}
+		
+		//test_g2();
 	}
 
+
 }
+
 
 int cmp(const pair<string,int> &x,const pair<string,int>&y)
 {
@@ -471,6 +546,90 @@ unsigned long int test_g(string addr1)
 			}
 		}
 		return j;
+	}
+}
+
+void test_g2(string s,string s1,unsigned long int g)
+{
+	list<unsigned long> g_array = mymap6[s1];
+	unsigned long int m = g_array.back();
+	if (g > m)
+	{
+		for(int i=m+1; i < g ; i++)
+			mymap6[s1].push_back(i);
+
+		mymap6[s1].push_back(g+1);
+	}
+	else if (g == m)
+	{
+		mymap6[s1].pop_back();
+		mymap6[s1].push_back(g+1);
+	}
+	else
+	{
+		for(int i = 1; i < gid.size(); i++)
+		{
+			
+			g_array1 = g_array1 * mymap4[gid[i]];
+			
+			if(g_array1.empty())
+			{
+				break;
+			}
+		}
+	
+		if(g_array1.empty())
+		{
+			unsigned long int m,n = 0;
+			
+			for(int i = 0; i < gid.size(); i++)
+			{
+				list<unsigned long int> g_array3 = mymap4[gid[i]];
+				m = g_array3.back();
+				if(m > n)
+					n =m;		
+			}
+			for(int i = 0; i < gid.size(); i++)
+			{
+				list<unsigned long int> g_array4 = mymap4[gid[i]];
+				unsigned long int p = g_array4.back();
+				if(p == n)
+				{
+					mymap4[gid[i]].pop_back();
+					mymap4[gid[i]].push_back(n+1);
+					
+				}
+				else
+				{
+					for(int r = p+1; r < n-1; r++)
+					{
+						mymap4[gid[i]].push_back(r);
+					}
+					mymap4[gid[i]].push_back(n);
+				}
+				
+			}
+			return n;
+		}
+		else
+		{
+			unsigned long int j = g_array1.front();
+			for(int i = 0; i < gid.size(); i++)
+			{
+				list<unsigned long int> g_array2 = mymap4[gid[i]];
+				unsigned long int l = g_array2.back();
+				if(l == j)
+				{
+					mymap4[gid[i]].pop_back();
+					mymap4[gid[i]].push_back(l+1);
+					
+				}
+				else{
+					mymap4[gid[i]].remove(j);
+				}
+			}
+			return j;
+		}	
 	}
 }
 
