@@ -436,11 +436,11 @@ unsigned long int test_g(string addr1)
 			}
 			else
 			{
-				for(int r = p+1; r < n-1; r++)
+				for(int r = p+1; r < n; r++)
 				{
 					mymap4[gid[i]].push_back(r);
 				}
-				mymap4[gid[i]].push_back(n);
+				mymap4[gid[i]].push_back(n+1);
 			}
 			
 		}

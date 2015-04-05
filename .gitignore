@@ -1,2 +1,4 @@
 split/*.txt
 split/result/*.txt
+split/test
+split/split

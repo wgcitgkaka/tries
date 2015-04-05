@@ -749,7 +749,7 @@ void myprint4()
 		{
 			cout << *iter << ",";
 		}
-		cout << "}"<< endl << endl;
+		cout << "}"<< endl<< endl;
 		it++;
 		j++;
 
