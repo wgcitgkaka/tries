@@ -12,7 +12,7 @@
 #include <cmath>
 using namespace std;
 
-#define SPOS           2
+#define SPOS          1 
 #define BUFFER_SIZE    256
 #define LESS_LENGTH    0
 
@@ -82,7 +82,7 @@ int main()
 	
 	memset(key_key2,0,length*sizeof(unsigned long int));
 	FILE* file;	
-	file = fopen("data_test","r");
+	file = fopen("rrc14_201209010000_v4.txt","r");
 //	file = fopen("data_test","r");
 	char* buffer; 
 	char buffer2[BUFFER_SIZE];
@@ -355,7 +355,7 @@ void myprint2()
 	while(it != v_result2.end())
 	{
 		
-			ofstream outf("result2.txt",ios::app);
+			ofstream outf("./result/result2.txt",ios::app);
 			streambuf *default_buff = cout.rdbuf();
 
 			cout.rdbuf(outf.rdbuf());
@@ -394,7 +394,7 @@ void myprint()
 				cc = bb;*/
 		//	cout<< i <<"    " << it->first <<"    "<< *iter <<"    "<< j << endl;
 		}
-			ofstream outf("result1.txt",ios::app);
+			ofstream outf("./result/result1.txt",ios::app);
 			streambuf *default_buff = cout.rdbuf();
 
 			cout.rdbuf(outf.rdbuf());
@@ -462,7 +462,7 @@ void make_map3()
 void findMkey()
 {
 
-	ofstream outf2("result3.txt",ios::app);
+	ofstream outf2("./result/result3.txt",ios::app);
 	streambuf *default_buff2 = cout.rdbuf();
 	cout.rdbuf(outf2.rdbuf());
 	for(int i = 0; i != myvector2.size();i++)
@@ -699,7 +699,7 @@ list<unsigned long int> operator*(list<unsigned long int> aa, list<unsigned long
 void myprint3()
 {
 	map<string, int>::iterator it = mymap5.begin();
-	ofstream outf2("result4.txt",ios::app);
+	ofstream outf2("./result/result4.txt",ios::app);
 		streambuf *default_buff2 = cout.rdbuf();
 		cout.rdbuf(outf2.rdbuf());
 	while(it != mymap5.end())
@@ -734,7 +734,7 @@ void myprint4()
 	map<string, list<unsigned long int> >::iterator it = mymap6.begin();
 	int j = 0;
 
-	ofstream outf2("2result1.txt",ios::app);
+	ofstream outf2("./result/2result1.txt",ios::app);
 	streambuf *default_buff2 = cout.rdbuf();
 	cout.rdbuf(outf2.rdbuf());
 
@@ -774,7 +774,7 @@ void myprint4()
 
 void myprint5()
 {
-	ofstream outf2("2result2.txt",ios::app);
+	ofstream outf2("./result/2result2.txt",ios::app);
 	streambuf *default_buff2 = cout.rdbuf();
 	cout.rdbuf(outf2.rdbuf());
 	
@@ -789,7 +789,7 @@ void myprint5()
 
 void myprint6()
 {
-	ofstream outf2("2result3.txt",ios::app);
+	ofstream outf2("./result/2result3.txt",ios::app);
 	streambuf *default_buff2 = cout.rdbuf();
 	cout.rdbuf(outf2.rdbuf());
 
@@ -828,7 +828,7 @@ void myprint6()
 
 void myprint7()
 {
-	ofstream outf2("2result4.txt",ios::app);
+	ofstream outf2("./result/2result4.txt",ios::app);
 	streambuf *default_buff2 = cout.rdbuf();
 	cout.rdbuf(outf2.rdbuf());
 	unsigned long long int sum = 0;
