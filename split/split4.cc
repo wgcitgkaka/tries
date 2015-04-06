@@ -9,6 +9,7 @@
 #include <fstream>
 #include <math.h>
 #include <list>
+#include <cmath>
 using namespace std;
 
 #define SPOS           2
@@ -20,7 +21,7 @@ map<string, vector<string> > mymap;//group key=addr2 value = addr1
 
 vector<string> myvector;// addr vector
 
-map<string,int > mymap2;//group key=add1 value=count(addr1)
+map<string,int > mymap2;//group key=add1 value=count(addr2)
 
 map<string,vector<int> > mymap3;//addr1,vector<gid>
 map<int,list<unsigned long> > mymap4;//g[] shu zu
@@ -36,9 +37,9 @@ char* b;//split1
 char* c;//split2
 char* d;//split3
 
-unsigned long int pow(unsigned long int i,unsigned long int j);
+unsigned long int mypow(unsigned long int i,unsigned long int j);
 
-unsigned long length = pow((unsigned long int)2,(unsigned long int)SPOS);
+unsigned long length = mypow((unsigned long int)2,(unsigned long int)SPOS);
 
 unsigned long int* key_key1 = new unsigned long int[length]; 
 unsigned long int* key_key2 = new unsigned long int[length];
@@ -53,6 +54,9 @@ void myprint();
 void myprint2();
 void myprint3();
 void myprint4();
+void myprint5();
+void myprint6();
+void myprint7();
 
 
 char* mysplit(char* a, int spos);//addr2
@@ -124,6 +128,9 @@ int main()
 
 	myprint3();
 	myprint4();
+	myprint5();
+	myprint6();
+	myprint7();
        // testprint();
 
 	fclose(file);
@@ -243,7 +250,7 @@ void myinsert(char* addr2,char* addr1)
 	{
 		if(s[k] == '1')
 		{
-			addr1_a = addr1_a + pow((unsigned long)2,(unsigned long)j);
+			addr1_a = addr1_a + mypow((unsigned long)2,(unsigned long)j);
 				
 		}
 	}
@@ -467,7 +474,7 @@ void findMkey()
 		{
 			if(addr1[k] == '1')
 			{
-				addr1_a = addr1_a + pow((unsigned long)2,(unsigned long)j);
+				addr1_a = addr1_a + mypow((unsigned long)2,(unsigned long)j);
 				
 			}
 		}
@@ -668,12 +675,12 @@ unsigned long int test_g2(string s,string s1,unsigned long int g)
 	}
 }
 
-unsigned long int pow(unsigned long int i,unsigned long int j)
+unsigned long int mypow(unsigned long int i,unsigned long int j)
 {
      if (j == 0)
          return 1;
      else 
-         return i * pow(i,j-1);  
+         return i * mypow(i,j-1);  
 } 
 
 
@@ -763,6 +770,89 @@ void myprint4()
 	outf2.close();
 	cout.rdbuf(default_buff2);
 
+}
+
+void myprint5()
+{
+	ofstream outf2("2result2.txt",ios::app);
+	streambuf *default_buff2 = cout.rdbuf();
+	cout.rdbuf(outf2.rdbuf());
+	
+	cout << mymap.size() << endl;
+	cout << endl;
+		
+
+	outf2.flush();
+	outf2.close();
+	cout.rdbuf(default_buff2);
+}
+
+void myprint6()
+{
+	ofstream outf2("2result3.txt",ios::app);
+	streambuf *default_buff2 = cout.rdbuf();
+	cout.rdbuf(outf2.rdbuf());
+
+	long double avg = (long double)myvector.size()/(long double)mymap.size();
+	
+	long double sum = 0.0;
+	long double sd = 0.0;
+	vector<unsigned long> aaa;
+	//printf("haha1\n");
+	for(map<string, vector<string> >::iterator iter = mymap.begin(); iter != mymap.end(); iter++)
+	{
+		aaa.push_back((unsigned long)(iter->second.size()));
+		//printf("haha\n");
+	}
+
+	for(vector<unsigned long>::iterator it = aaa.begin(); it != aaa.end() ; it++)
+	{
+		long double tmp = (long double)(*it) - (long double)avg;
+		sum += tmp * tmp;
+		//printf("haha2\n");
+	}
+		sd = sqrt(sum / mymap.size() );
+	cout << "sum total = " << myvector.size() << endl;
+	cout << "avg = " << avg << endl;
+	cout << "SD = " << sd << endl;
+	
+		
+
+	outf2.flush();
+	outf2.close();
+	cout.rdbuf(default_buff2);
+
+	cout << myvector.size() << endl;
+	cout << mymap.size() << endl;
+}
+
+void myprint7()
+{
+	ofstream outf2("2result4.txt",ios::app);
+	streambuf *default_buff2 = cout.rdbuf();
+	cout.rdbuf(outf2.rdbuf());
+	unsigned long long int sum = 0;
+	unsigned long long int sum1 = 0;
+
+	for(map<int,list<unsigned long> >::iterator iter = mymap4.begin(); iter != mymap4.end(); iter++)
+	{
+		sum += (unsigned long long)(iter->second.back());
+		//printf("haha\n");
+	}
+
+	cout << "sum=" << sum << endl;
+
+	for(map<string,list<unsigned long> >::iterator iter = mymap6.begin(); iter != mymap6.end(); iter++)
+	{
+		sum1 += (unsigned long long)(iter->second.back());
+		//printf("haha\n");
+	}
+
+	cout << "sum1=" << sum1 << endl;
+
+	outf2.flush();
+	outf2.close();
+	cout.rdbuf(default_buff2);
 }
 
 /*void testprint()
