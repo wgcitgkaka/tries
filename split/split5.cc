@@ -779,8 +779,9 @@ void myprint4()
 
 void myprint5()
 {
-	char* filename;
-	sprintf(filename, "%d_2result2.txt", SPOS); 
+	char filename[100];
+	sprintf(filename, "./result/%d_2result2.txt", SPOS);
+
 	ofstream outf2(filename,ios::app);
 	streambuf *default_buff2 = cout.rdbuf();
 	cout.rdbuf(outf2.rdbuf());
@@ -796,8 +797,8 @@ void myprint5()
 
 void myprint6()
 {
-	char* filename;
-	sprintf(filename, "%d_2result3.txt", SPOS); 
+	char filename[100];
+	sprintf(filename, "./result/%d_2result3.txt", SPOS); 
 	ofstream outf2(filename,ios::app);
 	streambuf *default_buff2 = cout.rdbuf();
 	cout.rdbuf(outf2.rdbuf());
@@ -837,8 +838,9 @@ void myprint6()
 
 void myprint7()
 {
-	char* filename;
-	sprintf(filename, "%d_2result4.txt", SPOS); 
+	char filename[100];
+	sprintf(filename, "./result/%d_2result4.txt", SPOS);
+
 	ofstream outf2(filename,ios::app);
 	streambuf *default_buff2 = cout.rdbuf();
 	cout.rdbuf(outf2.rdbuf());
