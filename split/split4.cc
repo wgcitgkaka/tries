@@ -848,7 +848,7 @@ void myprint7()
 		//printf("haha\n");
 	}
 
-	cout << "sum1=" << sum1 << endl;
+	cout << "sum1=" << sum1 << endl << endl;
 
 	outf2.flush();
 	outf2.close();
