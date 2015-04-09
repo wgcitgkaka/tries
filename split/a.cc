@@ -4,7 +4,7 @@
 #include <vector>
 
 using namespace std;
-
+#define kaka 22
 /*int aaa = 0;
 
 void func()
@@ -56,5 +56,6 @@ for(int i = a.size()-1,j =0 ; i >= 0; i--,j++)
 	}
 }
 cout << b<< "   "<< c << endl;
+kaka = 5;
 return 0;
 }
