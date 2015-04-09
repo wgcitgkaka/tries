@@ -12,7 +12,7 @@
 #include <cmath>
 using namespace std;
 
-#define SPOS          16 
+#define SPOS         5 
 #define BUFFER_SIZE    256
 #define LESS_LENGTH    0
 
@@ -463,7 +463,9 @@ void make_map3()
 void findMkey()
 {
 
-	ofstream outf2("./result/result3.txt",ios::app);
+	char filename[100];
+	sprintf(filename, "./result/%d_result3.txt", SPOS);
+	ofstream outf2(filename,ios::app);
 	streambuf *default_buff2 = cout.rdbuf();
 	cout.rdbuf(outf2.rdbuf());
 	for(int i = 0; i != myvector2.size();i++)
