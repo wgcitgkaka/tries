@@ -139,8 +139,8 @@ int main()
 
 void vec_uniq()
 {
-		sort(myvector.begin(),myvector.end());
-		myvector.erase(unique(myvector.begin(),myvector.end()),myvector.end());
+	sort(myvector.begin(),myvector.end());
+	myvector.erase(unique(myvector.begin(),myvector.end()),myvector.end());
 	
 }
 
