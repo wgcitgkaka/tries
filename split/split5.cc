@@ -21,7 +21,7 @@ map<string, vector<string> > mymap;//group key=addr2 value = addr1
 
 vector<string> myvector;// addr vector
 
-map<string,int > mymap2;//group key=add1 value=count(addr2)
+map<string,int > mymap2;//group key=add1 value=count(addr1)
 
 map<string,vector<int> > mymap3;//addr1,vector<gid>
 map<int,list<unsigned long> > mymap4;//g[] shu zu
@@ -30,8 +30,6 @@ map<string, list<unsigned long> > mymap6;//g[] id is addr2
 map<string, vector<string> > mymap1;//addr1 addr2
 
 vector<pair<string,int> > myvector2;//addr1 chu xian zai ji he shu zu li mian
-
-
 
 char* b;//split1
 char* c;//split2

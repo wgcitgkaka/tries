@@ -16,24 +16,31 @@ using namespace std;
 #define BUFFER_SIZE    256
 #define LESS_LENGTH    0
 
+
 map<string, vector<string> > mymap;//group key=addr2 value = addr1
 
 vector<string> myvector;// addr vector
 
-map<string,int > mymap2;//group key=add1 value=count(addr1)
+map<string,int > mymap2;//group key=add1 value=count(addr2)
 
-vector<pair<string,int> > myvector2;//addr1 chu xian zai duo shao ge ji he shu zu li mian
+map<string,vector<int> > mymap3;//addr1,vector<gid>
+map<int,list<unsigned long> > mymap4;//g[] shu zu
+map<string,int> mymap5;//addr2  gid
+map<string, list<unsigned long> > mymap6;//g[] id is addr2
+map<string, vector<string> > mymap1;//addr1 addr2
+
+vector<pair<string,int> > myvector2;//addr1 chu xian zai ji he shu zu li mian
 
 char* b;//split1
 char* c;//split2
 char* d;//split3
 
-unsigned int mypow(unsigned int i,unsigned int j);
+unsigned long int mypow(unsigned long int i,unsigned long int j);
 
-unsigned int length = mypow((unsigned int)2,(unsigned int)SPOS);
+unsigned long length = mypow((unsigned long int)2,(unsigned long int)SPOS);
 
-unsigned int* key_key1 = new unsigned int[length];
-unsigned int* key_key2 = new unsigned int[length];
+unsigned long int* key_key1 = new unsigned long int[length]; 
+unsigned long int* key_key2 = new unsigned long int[length];
 
 
 void myinsert(char* addr2, char* buffer);
@@ -65,6 +72,8 @@ void make_map3();
 unsigned long int test_g(string addr1);
 unsigned long int test_g2(string s,string s1,unsigned long int g);
 
+void testprint();
+
 
 int main()
 {
@@ -85,7 +94,8 @@ int main()
 		buffer = strtok(buffer2," ");
 		if(buffer2[strlen(buffer2)-1] == '\n')
 			buffer2[strlen(buffer2)-1] = 0;
-
+//		printf("%s\n",buffer);
+//		printf("%s\n",buffer2);
 		
 		myvector.push_back(buffer);
 
@@ -95,8 +105,11 @@ int main()
 		{
 			addr1 = mysplit3(buffer,SPOS);
 			myinsert(addr2,addr1);
+		//	printf("%s\n",addr2);
 			delete[] d;
 		}
+		//mapprint();
+//		printf("-----\n");
 		delete[] b;
 	}
 	
@@ -104,11 +117,24 @@ int main()
 	tongjikey();
 
 
+	myprint2();
+	myprint();
+
+
+        make_map3();
+	findMkey();
+
+//	myprint3();
+//	myprint4();
+	myprint5();
+	myprint6();
+	myprint7();
+
 	fclose(file);
 	return 0;
 }
 
-//qu chong
+
 void vec_uniq()
 {
 	sort(myvector.begin(),myvector.end());
@@ -116,7 +142,6 @@ void vec_uniq()
 	
 }
 
-//gen ju chai fen wei zhi tong ji addr1 de ge shu
 void tongjikey()
 {
 	char* buff;
@@ -137,9 +162,10 @@ void tongjikey()
 char* mysplit(char* a, int spos)
 {
 	int len = strlen(a);
+//	b=(char*)malloc(256);
 	b = new char[50];
 	memset(b,0,50);
-
+//	printf("length=%d\n",len);
 	if(len <= SPOS)
 	{
 		return LESS_LENGTH;
@@ -148,7 +174,9 @@ char* mysplit(char* a, int spos)
 	for(int i = SPOS,j = 0; i < len; i++,j++)
 	{
 		b[j] = a[i];
-	
+	//	printf("%c\n",a[i]);
+		
+		//printf("hehe\n");
 	}
 
 	return b;
@@ -170,9 +198,10 @@ char* mysplit2(string a, int spos)
 char* mysplit3(char* a, int spos)
 {
 	int len = strlen(a);
+//	b=(char*)malloc(256);
 	d = new char[50];
 	memset(d,0,50);
-
+//	printf("length=%d\n",len);
 	if(len <= SPOS)
 	{
 		return LESS_LENGTH;
@@ -181,7 +210,9 @@ char* mysplit3(char* a, int spos)
 	for(int i = 0; i < SPOS; i++)
 	{
 		d[i] = a[i];
-
+	//	printf("%c\n",a[i]);
+		
+		//printf("hehe\n");
 	}
 
 	return d;
@@ -191,16 +222,106 @@ char* mysplit3(char* a, int spos)
 void myinsert(char* addr2,char* addr1)
 {
 	vector<string> a;
-	a.push_back(buffer);
+	a.push_back(addr1);
+
+	vector<string> aa;
+	aa.push_back(addr2);
+
+	list<unsigned long> gshuzu;
+	gshuzu.push_back(0);
 	
-	pair<map<string, vector<string> >::iterator, bool>  ret = mymap.insert(make_pair(addr2,a));
-	
-	if(!ret.second)
+	string s = addr1;
+	string s1 = addr2;
+/*	for(vector<string>::iterator iter = a.begin(); iter != a.end(); ++iter)
 	{
-		(ret.first->second).push_back(buffer);
-		sort(ret.first->second.begin(),ret.first->second.end());
-		ret.first->second.erase(unique(ret.first->second.begin(),ret.first->second.end()),ret.first->second.end());
+//		printf("iter%s\n", (char*) *iter);
+		cout << *iter << endl;
+		cout << "haha" << endl;
 	}
+	
+*/
+
+	unsigned long int g,addr1_a = 0;
+		
+	for(int k = s.size()-1,j = 0 ; k >= 0; k--,j++)
+	{
+		if(s[k] == '1')
+		{
+			addr1_a = addr1_a + mypow((unsigned long)2,(unsigned long)j);
+				
+		}
+	}
+		
+	
+	g = key_key2[addr1_a];
+		
+
+	pair<map<string, list<unsigned long> >::iterator, bool>  ret2 = mymap6.insert(make_pair(addr2,gshuzu));
+	
+	if(!ret2.second)
+	{
+		pair<map<string, vector<string> >::iterator, bool>  ret = mymap.insert(make_pair(addr2,a));
+	
+		if(!ret.second)
+		{
+				
+		//(ret.first->second).push_back(buffer);
+
+			if(find(ret.first->second.begin(),ret.first->second.end(),s) == ret.first->second.end())
+
+               			(ret.first->second).push_back(addr1);
+
+		//sort(ret.first->second.begin(),ret.first->second.end());
+		//ret.first->second.erase(unique(ret.first->second.begin(),ret.first->second.end()),ret.first->second.end());
+		}
+	
+	
+
+		pair<map<string, vector<string> >::iterator, bool>  ret1 = mymap1.insert(make_pair(addr1,aa));
+	
+		if(!ret1.second)
+		{
+				
+
+			if(find(ret1.first->second.begin(),ret1.first->second.end(),s1) == ret1.first->second.end())
+			{
+               			(ret1.first->second).push_back(addr2);
+				key_key2[addr1_a] = test_g2(s,s1,g);
+			}
+
+		}
+		else
+		{
+			key_key2[addr1_a] = test_g2(s,s1,g);
+		}
+		
+	
+	}
+	else
+	{	
+
+		mymap.insert(make_pair(addr2,a));
+
+		pair<map<string, vector<string> >::iterator, bool>  ret3 = mymap1.insert(make_pair(addr1,aa));
+	
+		if(!ret3.second)
+		{
+				
+			if(find(ret3.first->second.begin(),ret3.first->second.end(),s1) == ret3.first->second.end())
+			{
+               			(ret3.first->second).push_back(addr2);
+				key_key2[addr1_a] = test_g2(s,s1,g);
+			}
+
+		}
+		else
+		{
+			key_key2[addr1_a] = test_g2(s,s1,g);
+		}
+		
+		//test_g2();
+	}
+
 
 }
 
@@ -747,98 +868,23 @@ void myprint7()
 	cout.rdbuf(default_buff2);
 }
 
-struct HashGroup
+/*void testprint()
 {
-	int nBlocks;
-	int* primes;
-	int* used;
-	int** Block;
-};
-typedef struct HashGroup HashGroup;
-
-typedef struct Node
-{
-	string addr1;
-	string next_hop;
-}Node;
-
-void mul_hashtable_create();
-void prepare_hash_group(HashGroup& hg, int g);
-int mul_is_prime(int num);
-int find_prime_number(int g);
-
-map <string, HashGroup> hash_map;
-
-
-int main()
-{
-	multi_hash_insert();	
-	cout << "hello world!" << endl;
-	return 0;
-}
-
-void prepare_hash_group(HashGroup& hg, int g)
-{
-	hg.primes = new int[hg.nBlocks];
-	hg.used = new int[hg.nBlocks];
-	hg.Block = new int*[hg.nBlocks];
-
-	for(int i=0; i < hg.nBlocks; i++)
+	map<int,list<unsigned long> >::iterator it = mymap4.begin();
+	while (it != mymap4.end())
 	{
-		hg.primes[i] = find_prime_number(g);
-	}
-	for(int i=0; i < hg.nBlocks; i++)
-	{
-		hg.Block[i] = new int[hg.primes[i]];
-	}
-}
-
-int find_prime_number(int g)
-{
-	int prime = 1;
-
-	for(g = g - 1; g > 0; g--)
-	{
-		if(mul_is_prime(g))
+		int a = it->first;
+		list<unsigned long int> aa = it->second;
+		cout << "gid=" << a << endl;
+		for(list<unsigned long int>::iterator ite = aa.begin(); ite != aa.end(); ite++)
 		{
-			prime = g;
-			break;
+			cout << "value = " << *ite << endl;
 		}
+		cout << "----------------" << endl;
+		it++;
 	}
-	return prime;
 }
-
-int mul_is_prime(int num)
-{
-	int i;
-	int prime = 1;
-
-	for(i = num/2; i > 1; i--)
-	{
-		if(num % i == 0)
-		{
-			prime = 0;
-			break;
-		}
-	}
-	return prime;
-}
-void mul_hashtable_create()
-{
-	HashGroup hg;
-	hg.nBlocks = 2;
-	prepare_hash_group(hg,10);
-	cout << "hg.prime[0]=" << hg.primes[0] << endl; 
-}
-
-void mul_hashtable_insert()
-{
-	
-}
-
-
-
-
+*/
 
 
 
