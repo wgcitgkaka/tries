@@ -24,6 +24,8 @@ map<string,int > mymap2;//group key=add1 value=count(addr1)
 
 vector<pair<string,int> > myvector2;//addr1 chu xian zai duo shao ge ji he shu zu li mian
 
+map <string, HashGroup> hash_map;
+
 char* b;//split1 addr2
 char* c;//split2 addr1
 char* d;//split3 addr1
@@ -59,12 +61,18 @@ struct HashGroup
 };
 typedef struct HashGroup HashGroup;
 
+typedef struct Node
+{
+	string addr1;
+	string next_hop;
+}Node;
+
 int main()
 {
 	
-	memset(key_key2,0,length*sizeof(unsigned long int));
+	memset(key_key2,0,length*sizeof(unsigned int));
 	FILE* file;	
-	file = fopen("rrc14_201209010000_v4.txt","r");
+	file = fopen("data_test","r");
 //	file = fopen("data_test","r");
 	char* buffer; 
 	char buffer2[BUFFER_SIZE];
@@ -74,12 +82,12 @@ int main()
 	while(fgets(buffer2,BUFFER_SIZE,file))
 //	while(fscanf(file,"%s",buffer2) != -1)
 	{
-		
-		buffer = strtok(buffer2," ");
+
 		if(buffer2[strlen(buffer2)-1] == '\n')
 			buffer2[strlen(buffer2)-1] = 0;
 
-		
+		buffer = strtok(buffer2," ");
+	
 		myvector.push_back(buffer);
 
 		addr2 = mysplit(buffer,SPOS);
@@ -91,12 +99,14 @@ int main()
 			delete[] d;
 		}
 		delete[] b;
+	
 	}
 	
+/*	
 	vec_uniq();
 	tongjikey();
 
-
+*/
 	fclose(file);
 	return 0;
 }
@@ -235,11 +245,7 @@ unsigned int mypow(unsigned int i,unsigned int j)
 } 
 
 
-typedef struct Node
-{
-	string addr1;
-	string next_hop;
-}Node;
+
 
 void mul_hashtable_create();
 void prepare_hash_group(HashGroup& hg, int g);
@@ -248,19 +254,19 @@ int find_prime_number(int g);
 
 map <string, HashGroup> hash_map;
 
-void prepare_hash_group(HashGroup& hg, int g)
+void prepare_hash_group(HashGroup* hg, int g)
 {
-	hg.primes = new int[hg.nBlocks];
-	hg.used = new int[hg.nBlocks];
-	hg.Block = new int*[hg.nBlocks];
+	hg->primes = new int[hg.nBlocks];
+	hg->used = new int[hg.nBlocks];
+	hg->Block = new int*[hg.nBlocks];
 
-	for(int i=0; i < hg.nBlocks; i++)
+	for(int i=0; i < hg->nBlocks; i++)
 	{
-		hg.primes[i] = find_prime_number(g);
+		hg->primes[i] = find_prime_number(g);
 	}
-	for(int i=0; i < hg.nBlocks; i++)
+	for(int i=0; i < hg->nBlocks; i++)
 	{
-		hg.Block[i] = new int[hg.primes[i]];
+		hg->Block[i] = new int[hg->primes[i]];
 	}
 }
 
@@ -296,10 +302,16 @@ int mul_is_prime(int num)
 }
 void mul_hashtable_create()
 {
-	HashGroup hg;
-	hg.nBlocks = 2;
-	prepare_hash_group(hg,10);
-	cout << "hg.prime[0]=" << hg.primes[0] << endl; 
+
+	for(map<string, vector<string> >::iterator iter = mymap.begin(); iter != mymap.end(); iter++)
+	{	
+		HashGroup* hg = new HashGroup();
+		hg->nBlocks = 2;
+		prepare_hash_group(hg,iter->second.size());
+		hash_map.insert(iter->first,*hg);
+		delete hg;
+	}
+	
 }
 
 void mul_hashtable_insert()
