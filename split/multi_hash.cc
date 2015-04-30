@@ -316,7 +316,20 @@ void mul_hashtable_create()
 
 void mul_hashtable_insert()
 {
-	
+	for(map<string, vector<string> >::iterator iter = mymap.begin(); iter != mymap.end(); iter++)
+	{	
+		vector<string> addr1_v = iter->second;
+		HashGroup hg = hash_map(iter->first);
+		for(vector<string>::iterator it = addr1_v.begin(); it != addr1_v.end(); it++)
+		{
+			unsigned int hash_num = addr1_to_integer(*it);
+			for(int i = 0; i < hg.nBlocks; i ++)
+			{
+					unsigned 
+			}
+			
+		}
+	}
 }
 
 
