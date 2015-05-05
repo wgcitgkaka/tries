@@ -32,10 +32,6 @@ unsigned int mypow(unsigned int i,unsigned int j);
 
 unsigned int length = mypow((unsigned int)2,(unsigned int)SPOS);
 
-unsigned int* key_key1 = new unsigned int[length];
-unsigned int* key_key2 = new unsigned int[length];
-
-
 void myinsert(char* addr2, char* buffer);
 
 void vec_uniq();//vector qu chong
@@ -109,8 +105,11 @@ int main()
 		delete[] b;
 	
 	}
+	cout << "create()" << endl;
 	mul_hashtable_create();
+	cout << "mul_hashtable_insert()" << endl;
 	mul_hashtable_insert();
+	cout << "count()" << endl;
 	count_primes();
 /*	
 	vec_uniq();
