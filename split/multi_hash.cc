@@ -12,7 +12,7 @@
 #include <cmath>
 using namespace std;
 
-#define SPOS         20 
+#define SPOS         5 
 #define BUFFER_SIZE    256
 #define LESS_LENGTH    0
 
@@ -74,7 +74,6 @@ map <string, HashGroup> hash_map;
 int main()
 {
 	
-	memset(key_key2,0,length*sizeof(unsigned int));
 	FILE* file;	
 	file = fopen("rrc14_201209010000_v4.txt","r");
 //	file = fopen("data_test","r");
@@ -279,8 +278,8 @@ void prepare_hash_group(HashGroup* hg, int g)
 int find_prime_number(int g)
 {
 	int prime = 1;
-	int m = 100;
-	int n = 10;
+	int m = 1000;
+	int n = 100;
 	int num0 = 0;
 	int num1 = 0;
 	int distance0 = 0;
