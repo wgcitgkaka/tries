@@ -12,7 +12,7 @@
 #include <cmath>
 using namespace std;
 
-#define SPOS         5 
+#define SPOS         20 
 #define BUFFER_SIZE    256
 #define LESS_LENGTH    0
 
@@ -401,15 +401,28 @@ void mul_hashtable_insert()
 
 void count_primes()
 {
+	char filename[100];
+	sprintf(filename, "mul_array_use%d.txt", SPOS);
+
 	unsigned long long int count = 0;
+	double use = 0.0;
+	ofstream outf2(filename,ios::app);
+	streambuf *default_buff2 = cout.rdbuf();
+	cout.rdbuf(outf2.rdbuf());
 	for(map<string, vector<string> >::iterator iter = mymap.begin(); iter != mymap.end(); iter++)
 	{	
 		HashGroup hg = hash_map[iter->first];
 		for(int i = 0; i < hg.nBlocks; i++)
 		{
 			count = count + (unsigned long long int)(hg.primes[i]);
+			use = (double)(hg.used[i])/(double)(hg.primes[i]);
+			cout << use << endl;
 		}
 	}
+	outf2.flush();
+	outf2.close();
+	cout.rdbuf(default_buff2);
+
 	cout << count << endl;
 }
 
