@@ -16,6 +16,6 @@ class UniTrie
 	void leafpush(Node* pnode);
 	void push(Node* pnode);
 	void trieprint(Node* pnode);
-	void trieprint2(Node* pnode);
+	void UniTrie::trieprint(Node* pnode);
 };
 #endif

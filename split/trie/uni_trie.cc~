@@ -147,8 +147,20 @@ void UniTrie::trieprint(Node* pnode)
 	}
 }
 
-
-
+void UniTrie::trieprint2(Node* pnode)
+{
+	Node* node = pnode;
+	String s;
+	if(pnode != NULL)
+	{
+		if()
+	}
+	else
+	{	
+		
+		return;
+	}
+}
 
 
 
