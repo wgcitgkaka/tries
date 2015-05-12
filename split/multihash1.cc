@@ -48,10 +48,10 @@ void sortMapbyValue(map<string, int> &t_map, vector<pair<string,int> > &t_vec);
 
 struct HashGroup
 {
-	int nBlocks;
-	int* primes;
-	int* used;
-	int** Block;
+	unsigned int nBlocks;
+	unsigned int* primes;
+	unsigned int* used;
+	unsigned int** Block;
 };
 typedef struct HashGroup HashGroup;
 
@@ -61,12 +61,11 @@ typedef struct Node
 	string next_hop;
 }Node;
 
-void mul_hashtable_create();
-void mul_hashtable_insert();
-void prepare_hash_group(HashGroup& hg, int g);
-int mul_is_prime(int num);
-int find_prime_number(int g);
+
 void count_primes();
+void mul_hashtable_insert();
+unsigned int mul_is_prime(unsigned int num);
+vector<unsigned int> find_prime_vector(unsigned int min,unsigned int max);
 
 map <string, HashGroup> hash_map;
 
@@ -104,8 +103,8 @@ int main()
 		delete[] b;
 	
 	}
-	cout << "create()" << endl;
-	mul_hashtable_create();
+	//cout << "create()" << endl;
+	//mul_hashtable_create();
 	cout << "mul_hashtable_insert()" << endl;
 	mul_hashtable_insert();
 	cout << "count()" << endl;
@@ -203,14 +202,18 @@ void myinsert(char* addr2,char* addr1)
 {
 	vector<string> a;
 	a.push_back(addr1);
+	//string s = addr1;
 	
 	pair<map<string, vector<string> >::iterator, bool>  ret = mymap.insert(make_pair(addr2,a));
 	
 	if(!ret.second)
 	{
-		(ret.first->second).push_back(addr1);
+		if(find(ret.first->second.begin(),ret.first->second.end(),addr1) == ret.first->second.end())
+               			(ret.first->second).push_back(addr1);
+
+		/*(ret.first->second).push_back(addr1);
 		sort(ret.first->second.begin(),ret.first->second.end());
-		ret.first->second.erase(unique(ret.first->second.begin(),ret.first->second.end()),ret.first->second.end());
+		ret.first->second.erase(unique(ret.first->second.begin(),ret.first->second.end()),ret.first->second.end());*/
 	}
 
 }
@@ -399,75 +402,11 @@ void mul_hashtable_insert()
 	}
 }
 */
-void prepare_hash_group(HashGroup* hg, int g)
+
+unsigned int mul_is_prime(unsigned int num)
 {
-	hg->primes = new int[hg->nBlocks];
-	hg->used = new int[hg->nBlocks];
-	hg->Block = new int*[hg->nBlocks];
-	
-	for(int i = 0; i < hg->nBlocks; i++)
-	{
-		memset(hg->used,0,hg->nBlocks*sizeof(int));
-	}
-	for(int i=0; i < hg->nBlocks; i++)
-	{
-		hg->primes[i] = find_prime_number(g);
-	}
-	for(int i=0; i < hg->nBlocks; i++)
-	{
-		hg->Block[i] = new int[hg->primes[i]];
-		memset(hg->Block[i],0,hg->primes[i]*sizeof(int));   //初始化二维数组
-	}
-}
-
-int find_prime_number(int g)
-{
-	int prime = 1;
-	int m = 1000;
-	int n = 100;
-	int num0 = 0;
-	int num1 = 0;
-	int distance0 = 0;
-	int distance1 = 0;
-	int distance = 0;
-	int tmp = 0;
-
-	vector<int> prime_array;
-
-	for(int i = g; i <= g + m*n; i++)
-	{
-		if(mul_is_prime(i))
-		{
-			prime_array.push_back(i);
-		}
-	}
-	for(vector<int>::iterator it = prime_array.begin(); it != prime_array.end(); it++)
-	{
-		for(int i = 0;;i++)
-		{
-			num0 = mypow(2,i);
-			if(num0 > *it)
-				break;
-		}
-		num1 = num0 / 2;
-		distance0 = *it - num1;
-		distance1 = num0 - *it;
-		distance = (distance0 < distance1 ? distance0:distance1);
-		
-		if(distance > tmp)
-		{
-			tmp = distance;
-			prime = *it;
-		}		
-		
-	}
-	return prime;
-}
-
-int mul_is_prime(int num)
-{
-	int i;
-	int prime = 1;
+	unsigned int i;
+	unsigned int prime = 1;
 
 	for(i = num/2; i > 1; i--)
 	{
@@ -480,17 +419,20 @@ int mul_is_prime(int num)
 	return prime;
 }
 
-void mul_hashtable_create()
-{
 
-	for(map<string, vector<string> >::iterator iter = mymap.begin(); iter != mymap.end(); iter++)
-	{	
-		HashGroup* hg = new HashGroup();
-		hg->nBlocks = 2;
-		prepare_hash_group(hg,iter->second.size());
-		hash_map.insert(make_pair(iter->first,*hg));
-		delete hg;
+vector<unsigned int> find_prime_vector(unsigned int min,unsigned int max)
+{
+	vector<unsigned int> prime_array;
+
+	for(unsigned int i = min; i <= max; i++)
+	{
+		if(mul_is_prime(i))
+		{
+			prime_array.push_back(i);
+		}
 	}
+	
+	return prime_array;
 	
 }
 void mul_hashtable_insert()
@@ -499,14 +441,70 @@ void mul_hashtable_insert()
 	{	
 		vector<string> addr1_v = iter->second;
 		HashGroup* hg = new HashGroup();
+
 		hg->nBlocks = 2;
-		for(vector<string>::iterator it = addr1_v.begin(); it != addr1_v.end(); it++)
+		hg->primes = new unsigned int[2]();
+		hg->used = new unsigned int[2]();
+		hg->Block = new unsigned int* [2]();
+
+		unsigned int min=0, max = 0;
+		min = addr1_v.size() / hg->nBlocks;
+		max = 2 * addr1_v.size();
+
+		unsigned int prime_1 = 0, prime_2 = 0;
+
+		vector<unsigned int> primes = find_prime_vector(min+1,max);
+		prime_1 = primes.back();
+		prime_2 = primes.front();
+
+		hg->Block[0] = new unsigned int[prime_1]();
+		hg->primes[0] = prime_1;
+		hg->primes[1] = prime_2;
+
+		//list<unsigned int> processing_list;
+		list<unsigned int> pending_list;
+
+		for(vector<string>::iterator it = addr1_v.begin(); it != addr1_v.end(); ++it)
 		{
 			unsigned int hash_num = addr1_to_integer(*it);
+						
+			unsigned int loc = hash_num % prime_1;
 			
-			
+			if(hg->Block[0][loc] == 0)
+			{
+				hg->Block[0][loc];
+				++hg->used[0];
+			}
+			else
+			{
+				pending_list.push_back(hash_num);				
+			}
 			
 		}
+		if(!pending_list.empty())
+		{			
+			hg->Block[1] = new unsigned int[prime_2]();
+			for(list<unsigned int>::iterator it = pending_list.begin(); it != pending_list.end(); ++it)
+			{
+				unsigned int loc2 = *it % prime_2;
+				if(hg->Block[1][loc2] == 0)
+				{	
+					hg->Block[1][loc2] = 2;
+					++hg->used[1];
+				}
+				else
+				{
+					cout << "chongtu" << endl;
+				}
+				
+			}
+		}
+		else
+			hg->primes[1] = 0;
+
+		hash_map.insert(make_pair(iter->first,*hg));
+		delete hg;
+		hg = NULL;
 	}
 }
 
@@ -526,15 +524,20 @@ void count_primes()
 		for(int i = 0; i < hg.nBlocks; i++)
 		{
 			count = count + (unsigned long long int)(hg.primes[i]);
-			use = (double)(hg.used[i])/(double)(hg.primes[i]);
-			cout << use << endl;
+			if(hg.primes[i] != 0)
+			{			
+				use = (double)(hg.used[i])/(double)(hg.primes[i]);
+				cout << use << endl;
+			}
 		}
+		
 	}
+	
 	outf2.flush();
 	outf2.close();
 	cout.rdbuf(default_buff2);
-
-	cout << count << endl;
+	cout << "count= " << count << endl;
+	
 }
 
 
