@@ -12,7 +12,7 @@
 #include <cmath>
 using namespace std;
 
-#define SPOS         20 
+#define SPOS         16 
 #define BUFFER_SIZE    256
 #define LESS_LENGTH    0
 
@@ -66,6 +66,7 @@ void count_primes();
 void mul_hashtable_insert();
 unsigned int mul_is_prime(unsigned int num);
 vector<unsigned int> find_prime_vector(unsigned int min,unsigned int max);
+//void myprint1();
 
 map <string, HashGroup> hash_map;
 
@@ -109,6 +110,7 @@ int main()
 	mul_hashtable_insert();
 	cout << "count()" << endl;
 	count_primes();
+//	myprint1();
 /*	
 	vec_uniq();
 	tongjikey();
@@ -211,10 +213,11 @@ void myinsert(char* addr2,char* addr1)
 		if(find(ret.first->second.begin(),ret.first->second.end(),addr1) == ret.first->second.end())
                			(ret.first->second).push_back(addr1);
 
-		/*(ret.first->second).push_back(addr1);
+/*		(ret.first->second).push_back(addr1);
 		sort(ret.first->second.begin(),ret.first->second.end());
-		ret.first->second.erase(unique(ret.first->second.begin(),ret.first->second.end()),ret.first->second.end());*/
-	}
+		ret.first->second.erase(unique(ret.first->second.begin(),ret.first->second.end()),ret.first->second.end());
+*/
+		}
 
 }
 
@@ -477,7 +480,8 @@ void mul_hashtable_insert()
 			}
 			else
 			{
-				pending_list.push_back(hash_num);				
+				pending_list.push_back(hash_num);	
+				cout << "haha" << endl;
 			}
 			
 		}
@@ -491,6 +495,7 @@ void mul_hashtable_insert()
 				{	
 					hg->Block[1][loc2] = 2;
 					++hg->used[1];
+			//		cout << "haha" << endl;
 				}
 				else
 				{
@@ -540,8 +545,17 @@ void count_primes()
 	
 }
 
-
-
+/*void myprint1()
+{
+	int i = 0;
+	for(map<string, vector<string> >::iterator iter = mymap.begin(); iter != mymap.end(); iter++)
+	{
+		i += iter->second.size();	
+	}
+	cout << "total:" << i << endl;
+	cout << "size:" << mymap.size() << endl;
+}
+*/
 
 
 
