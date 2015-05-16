@@ -29,7 +29,7 @@ map<string,int> mymap5;//addr2  gid
 map<string, list<unsigned long> > mymap6;//g[] id is addr2
 map<string, vector<string> > mymap1;//addr1 addr2
 
-vector<pair<string,int> > myvector2;//addr1 chu xian zai ji he shu zu li mian
+vector<pair<string,int> > myvector2;//addr1 chu xian zai duo shao ge ji he shu zu li mian
 
 
 
