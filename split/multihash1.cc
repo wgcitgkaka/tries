@@ -475,13 +475,12 @@ void mul_hashtable_insert()
 			
 			if(hg->Block[0][loc] == 0)
 			{
-				hg->Block[0][loc];
+				hg->Block[0][loc] = 2;
 				++hg->used[0];
 			}
 			else
 			{
 				pending_list.push_back(hash_num);	
-				cout << "haha" << endl;
 			}
 			
 		}
