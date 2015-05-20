@@ -14,3 +14,7 @@ mutihash1.cc 优化的hash
 如果做到prime_m了还有没有处理完的，就增大prime_m(还是从第1歩选择的素数中取)，如果取到最大一个了（prime_m=prime_1），还有没处理完的。再回过头去调整prime_m-1。以此类推。当然也可直接退出。将没有处理完的单独先保存起来，最后计算一个总数。
 
 multihash2.cc
+带有prime池的多哈希
+
+split(static_g).cc
+静态方法改造，省略gid
