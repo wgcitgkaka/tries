@@ -1,5 +1,5 @@
 split/*.txt
-split/result/*.txt
+split/result/*
 split/test
 split/split
 split/split16
