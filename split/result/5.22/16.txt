@@ -1,0 +1,4 @@
+mul_hashtable_insert()
+chongtu
+count()
+count= 26592118

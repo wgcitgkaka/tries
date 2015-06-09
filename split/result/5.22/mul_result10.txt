@@ -1,0 +1,4 @@
+create()
+mul_hashtable_insert()
+count()
+7388939232
