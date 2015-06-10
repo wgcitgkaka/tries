@@ -13,8 +13,6 @@ class UniTrie
 	UniTrie(){};
 	void init_trie(Node** pnode);
 	void insert_node(Node* pnode, int floor[PREFIX_LENGTH]);
-	void leafpush(Node* pnode);
-	void push(Node* pnode);
 	void trieprint(Node* pnode,int level);
 };
 #endif

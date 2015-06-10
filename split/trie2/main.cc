@@ -16,7 +16,7 @@ int main()
 	aa.trieprint(aa.node, 1);
 
 	cout << "num=" << number_nodes << endl;
-	cout << "total=" << temp[23] << endl;
+	cout << "total" << temp[23] << endl;
 	return 0;
 
 }

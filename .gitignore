@@ -3,3 +3,8 @@ split/result/*
 split/test
 split/split
 split/split16
+split/trie/*.txt
+split/trie/*.txt2
+split/trie2/*.txt
+split/trie2/*.txt2
+

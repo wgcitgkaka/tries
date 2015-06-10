@@ -8,7 +8,7 @@ int number_nodes = 0;
 void UniTrie::init_trie(Node** pnode)
 {
 	*pnode = new Node();
-	(*pnode)->left_data = (*pnode)->right_data = -1;
+	(*pnode)->data = -1;
 	(*pnode)->lchild = (*pnode)->rchild = NULL;
 } 
 
@@ -81,11 +81,11 @@ void UniTrie::insert_node(Node* pnode, int floor[PREFIX_LENGTH])
 				p--;
 				if(*p == '0')
 				{
-					node->left_data = hop;
+					node->data= hop;
 				}
 				else if(*p == '1')
 				{
-					node->right_data = hop;
+					node->data = hop;
 				}
 				break;
 			}
@@ -96,66 +96,39 @@ void UniTrie::insert_node(Node* pnode, int floor[PREFIX_LENGTH])
 	fclose(file);
 }
 
-void UniTrie::leafpush(Node* pnode)
-{
-	Node* node = pnode;
-	if(node != NULL)
-	{
-		if(node->lchild != NULL)
-		{		
-			if(node->lchild->left_data == -1)
-				node->lchild->left_data = node->left_data;
-			if(node->lchild->right_data == -1)
-				node->lchild->right_data = node->left_data;
-		}
-
-		if(node->rchild != NULL)
-		{
-			if(node->rchild->left_data == -1)
-				node->rchild->left_data = node->right_data;
-			if(node->rchild->right_data == -1)
-				node->rchild->right_data = node->right_data;
-		}
-		
-		leafpush(node->lchild);
-		leafpush(node->rchild);
-
-	}
-
-}
-
-void UniTrie::push(Node* pnode)
-{
-	Node* node = pnode;
-	if(node != NULL)
-	{
-		if(node->lchild != NULL)
-			node->left_data = -1;
-		if(node->rchild != NULL)
-			node->right_data = -1;
-
-		push(node->lchild);
-		push(node->rchild);
-	}
-}
 
 void UniTrie::trieprint(Node* pnode,int level)
 {
 	Node* node = pnode;
+
 	if(pnode != NULL)
 	{
 		if(level == 24)
 		{
-			if (pnode->lchild != NULL || pnode->rchild != NULL)
+			if (pnode->lchild != NULL || node->rchild != NULL)
 			{
 				++number_nodes;
 			}
 		}
-		++level;
-		trieprint(node->lchild,level);
-		trieprint(node->rchild,level);
+		trieprint(node->lchild,++level);
+		trieprint(node->rchild,++level);
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
