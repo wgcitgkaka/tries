@@ -16,6 +16,7 @@ using namespace std;
 #define BUFFER_SIZE    256
 #define LESS_LENGTH    0
 
+const double collision = 0.001;
 
 map<string, vector<string> > mymap;//group key=addr2 value = addr1
 
@@ -78,7 +79,31 @@ unsigned long int test_g(string addr1);
 unsigned long int test_g2(string s,string s1,unsigned long int g);
 
 void testprint();
-unsigned long int calg(list<unsigned long int>& g_list, int split_pos) ;
+
+struct HashGroup
+{
+	unsigned int nBlocks;
+	unsigned long int* primes;
+	unsigned long int* used;
+	unsigned long int** Block;
+};
+typedef struct HashGroup HashGroup;
+
+typedef struct Node
+{
+	string addr1;
+	string next_hop;
+}Node;
+
+
+void count_primes();
+void mul_hashtable_insert();
+unsigned int mul_is_prime(unsigned int num);
+void make_primes_pool(unsigned int min,unsigned int max);
+//void myprint1();
+
+map <string, HashGroup> hash_map;
+vector<unsigned long int> primes_array;
 
 int main(int argc, char* argv[])
 {
@@ -90,7 +115,7 @@ int main(int argc, char* argv[])
 	
 	//memset(key_key2,0,length*sizeof(unsigned long int));
 	FILE* file;	
-	file = fopen("rrc14_201209010000_v4.txt","r");
+	file = fopen("unique_ipv4.txt","r");
 //	file = fopen("data_test","r");
 	char* buffer; 
 	char buffer2[BUFFER_SIZE];
@@ -139,6 +164,11 @@ int main(int argc, char* argv[])
 	//myprint5();
 	myprint6();
 	myprint7();
+
+	cout << "mul_hashtable_insert()" << endl;
+	mul_hashtable_insert();
+	cout << "count()" << endl;
+	count_primes();
 
 	fclose(file);
 	return 0;
@@ -869,52 +899,41 @@ void myprint7()
 	cout.rdbuf(outf2.rdbuf());
 	unsigned long long int sum = 0;
 	unsigned long long int sum1 = 0;
-	unsigned long long int sum2 = 0;
-	unsigned long long int sum3 = 0;
 
 	for(map<int,list<unsigned long> >::iterator iter = mymap4.begin(); iter != mymap4.end(); iter++)
 	{
 		sum += (unsigned long long)(iter->second.back());
-		sum2 += (unsigned long long)(calg(iter->second,SPOS));
 		//printf("haha\n");
 	}
 
 	cout << "static=" << sum << endl;
-	cout << "optmize_static=" << sum2 << endl;
 
 	for(map<string,list<unsigned long> >::iterator iter = mymap6.begin(); iter != mymap6.end(); iter++)
 	{
 		sum1 += (unsigned long long)(iter->second.back());
-		sum3 += (unsigned long long)(calg(iter->second,SPOS));
 		//printf("haha\n");
 	}
 
 	cout << "dynamic=" << sum1 << endl ;
-	cout << "optmize_dynamic=" << sum3 << endl;
-	
+
 	outf2.flush();
 	outf2.close();
 	cout.rdbuf(default_buff2);
 }
 
-unsigned long int calg(list<unsigned long int>& g_list, int split_pos) {
-  //sort(g_list.begin(), g_list.end());//从小到大
-  vector<unsigned long int> g_vector;
+/*
+int calg(list<int>& g_list, int& split_pos) {
+  sort(g_list.begin(), g_list.end());//从小到大
 
-  for(list<unsigned long int>::iterator it = g_list.begin(); it != g_list.end(); ++it)
-  {
-	g_vector.push_back(*it);
-  } 
-  
-  size_t num = g_vector.size();
+  size_t num = g_list.size();
   size_t i, j = 0;
-  unsigned long int total_mem = 0, continues_cnt = 0;
+  int total_mem = 0, continues_cnt = 0;
 
   while ((i = j) < num) {
     total_mem += split_pos; // the size of bits for key'
 
     continues_cnt = 1;
-    for (j = i + 1 ;j < num && g_vector[j] == g_vector[j - 1] + 1; j ++){
+    for (j = i + 1 ; g_list[j] == g_list[j - 1] + 1 && j < num ; j ++){
       continues_cnt ++;
     };
 
@@ -925,6 +944,178 @@ unsigned long int calg(list<unsigned long int>& g_list, int split_pos) {
 
   return total_mem;
 }
+*/
+
+unsigned long int addr1_to_integer(string addr1)
+{
+	unsigned long int addr1_i = 0;
+	for(int k = addr1.size()-1,j=0; k >= 0; k--,j++)
+	{
+		if(addr1[k] == '1')
+		{
+				addr1_i = addr1_i + mypow((unsigned long int)2,(unsigned long int)j);
+		
+		}
+	}
+	return addr1_i;
+}
+
+unsigned long int mul_is_prime(unsigned long int num)
+{
+	unsigned long int i;
+	unsigned long int prime = 1;
+
+	for(i = num/2; i > 1; i--)
+	{
+		if(num % i == 0)
+		{
+			prime = 0;
+			break;
+		}
+	}
+	return prime;
+}
 
 
+void make_primes_pool(unsigned long int min,unsigned long int max)
+{
+	
+	for(unsigned long int i = min; i <= max; i++)
+	{
+		if(mul_is_prime(i))
+		{
+			primes_array.push_back(i);
+		}
+	}
+	
+	
+}
+
+void mul_hashtable_insert()
+{
+	make_primes_pool(1,4*length);
+	for(map<string, vector<string> >::iterator iter = mymap.begin(); iter != mymap.end(); ++iter)
+	{	
+		HashGroup* hg = new HashGroup();
+		hg->nBlocks = 2;
+		hg->primes = new unsigned long int[2]();
+		hg->used = new unsigned long int[2]();
+		hg->Block = new unsigned long int* [2]();
+		
+		vector<string> addr1_v = iter->second;
+		unsigned long int min = addr1_v.size() / hg->nBlocks;
+		
+		unsigned long int prime_1 = 0, prime_2 = 0;
+		
+		
+		for(vector<unsigned long>::iterator its = primes_array.begin(); its != primes_array.end(); ++its)
+		{
+			unsigned int collision_num = 0;
+			if(*its >= min)
+			{
+				prime_1 = *its;
+				prime_2 = *its;
+				
+				hg->Block[0] = new unsigned long int[prime_1]();
+				hg->primes[0] = prime_1;
+				hg->primes[1] = prime_2;
+
+				//list<unsigned int> processing_list;
+				list<unsigned long int> pending_list;
+
+				for(vector<string>::iterator it = addr1_v.begin(); it != addr1_v.end(); ++it)
+				{
+					unsigned long int g = addr1_to_integer(*it);
+					unsigned long int hash_num = key_key2[g];
+			
+					unsigned int loc = hash_num % prime_1;
+			
+					if(hg->Block[0][loc] == 0)
+					{
+						hg->Block[0][loc] = 2;
+						++hg->used[0];
+					}
+					else
+					{
+						pending_list.push_back(hash_num);	
+							//cout << "haha" << endl;
+					}
+			
+				}
+				if(!pending_list.empty())
+				{
+					hg->Block[1] = new unsigned long int[prime_2]();
+					for(list<unsigned long int>::iterator it = pending_list.begin(); it != pending_list.end(); ++it)
+					{
+						unsigned long int loc2 = *it % prime_2;
+						if(hg->Block[1][loc2] == 0)
+						{	
+							hg->Block[1][loc2] = 2;
+							++hg->used[1];
+						}
+						else
+						{
+							++collision_num;
+						}
+				
+					}
+				}
+				else
+					hg->primes[1] = 0;
+				
+				if(((double)collision_num/addr1_v.size() <= collision))
+				{
+					break;
+				}
+				else if (prime_1 != primes_array.back())
+				{
+					delete [] hg->Block[0];
+					delete [] hg->Block[1];
+					hg->used[0] = 0;
+					hg->used[1] = 0;
+				}
+				else
+				{
+					cout << "chongtu lv guo xiao" << endl;
+				}
+			}
+				
+		}
+		hash_map.insert(make_pair(iter->first,*hg));
+		delete hg;
+		hg = NULL;
+	}
+}
+
+void count_primes()
+{
+	char filename[100];
+	sprintf(filename, "d_remap_array_use%d.txt", SPOS);
+
+	unsigned long long int count = 0;
+	double use = 0.0;
+	ofstream outf2(filename,ios::app);
+	streambuf *default_buff2 = cout.rdbuf();
+	cout.rdbuf(outf2.rdbuf());
+	for(map<string, vector<string> >::iterator iter = mymap.begin(); iter != mymap.end(); iter++)
+	{	
+		HashGroup hg = hash_map[iter->first];
+		for(int i = 0; i < hg.nBlocks; i++)
+		{
+			count = count + (unsigned long long int)(hg.primes[i]);
+			if(hg.primes[i] != 0)
+			{			
+				use = (double)(hg.used[i])/(double)(hg.primes[i]);
+				cout << use << endl;
+			}
+		}
+		
+	}
+	
+	outf2.flush();
+	outf2.close();
+	cout.rdbuf(default_buff2);
+	cout << "count= " << count << endl;
+	
+}
 
