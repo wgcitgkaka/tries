@@ -1,0 +1,33 @@
+split.cc和split2.cc 无g数组统计
+split3.cc g数组的静态方法构建
+split4.cc g数组的动态构建
+split5.cc 根据分割位子创建动态文件名
+
+multihash.cc 普通hash,hash-->prime选择找到比这个值小的最大的离2的次幂最远的一个素数
+
+mutihash1.cc 优化的hash
+1. 每个hash_group对应m个prime（就是允许hash_block有不同的长度）。
+2. 按照如下方法确定这个m个prime的值。假设某个hash_group一共有n个条目。
+   1）在[n/m, 2n]之间选择 m 个素数，如果不够可再放宽条件到4n。prime_1=最大的那个素数。n个条目全放进processing_list
+   2）将processing_list中的数逐个取出对prime_1取模，如果没有冲突放入hash_block_1，否则放入pending_list。processing_list中的全部处理完了，交换processing_list和pending_list。
+	3) 如果processing_list，结束。否则设置prime_2为原来选取的素数中最小的那个。重复2）（这时是prime_2了）
+如果做到prime_m了还有没有处理完的，就增大prime_m(还是从第1歩选择的素数中取)，如果取到最大一个了（prime_m=prime_1），还有没处理完的。再回过头去调整prime_m-1。以此类推。当然也可直接退出。将没有处理完的单独先保存起来，最后计算一个总数。
+
+multihash2.cc
+代码优化多哈希
+
+multihash3.cc
+带有prime池的多哈希
+
+multihash4.cc
+带有静态g数组和prime池的多哈希
+
+multihash5.cc
+动态g数组方法的多哈希
+
+split(static_g).cc
+静态方法改造，省略gid
+
+split(dynamic).cc
+g数组的动态和静态方法，统计g数组总和，平均数等。。。
+
